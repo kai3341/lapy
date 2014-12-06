@@ -1,4 +1,4 @@
-lapy
+Lapy
 ====
 
-\{LaTeX} + Python = &lt;3
+{\LaTeX} + Python = &lt;3
