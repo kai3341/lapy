@@ -1,0 +1,23 @@
+%Some description
+
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{lapy}[2011/01/11 v0.01 LaTeX package for my own purpose]
+
+%\RequirePackage{whateverwe need}
+
+\let\olddocument\document
+\let\oldenddocument\enddocument
+\def\document{\begingroup\olddocument\lapyinit}
+\def\enddocument{\lapystop\oldenddocument\endgroup}
+
+%main functions
+\newcommand\lapysend[1]{\immediate\write18{empty -s -i lapy.fifo.out -o lapy.fifo.in '#1'\string\\n && empty -w -i lapy.fifo.out -o lapy.fifo.in -t 1 ">>>" ""}}
+\newcommand\lapyreq[1]{\lapysend{#1}\immediate\input "lapy.out"}
+\newcommand\lapyinit{\immediate\write18{empty -f -i lapy.fifo.in -o lapy.fifo.out -p lapy.pid python3 && touch lapy.out}\lapysend{import lapy}}
+\newcommand\lapystop{\lapysend{exit()}}
+%additional functions
+\newcommand\lapy[1]{\lapyreq{lapy.lapyout(#1)}}
+
+\endinput
+%%
+%% End of file `lapy.sty'.
