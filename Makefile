@@ -1,9 +1,11 @@
 CONTROL=package/DEBIAN/control
+DESTDIR?=package/
+
 
 all: deb clean
 
 clean:
-	rm -rf package/DEBIAN
+	rm -rf package/
 
 control:
 	mkdir -p package/DEBIAN
@@ -24,7 +26,7 @@ conffiles:
 	mkdir -p package/DEBIAN
 	touch package/DEBIAN/conffiles
 
-deb: control conffiles
+deb: control conffiles install
 	mkdir -p package/DEBIAN
 	echo "#!/bin/sh" > package/DEBIAN/postinst
 	echo "mktexlsr /usr/share/texlive/texmf-dist/" >> package/DEBIAN/postinst
@@ -33,3 +35,7 @@ deb: control conffiles
 	echo "mktexlsr /usr/share/texlive/texmf-dist/" >> package/DEBIAN/postrm
 	chmod +x package/DEBIAN/postrm
 	dpkg-deb -b package lapy.deb
+
+install:
+	install -Dm644 lapy.py  $(DESTDIR)usr/lib/python3/dist-packages/lapy.py
+	install -Dm644 lapy.sty $(DESTDIR)usr/share/texlive/texmf-dist/tex/latex/lapy/lapy.sty
